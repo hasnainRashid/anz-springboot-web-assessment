@@ -28,6 +28,11 @@ public class AccountListServiceImpl implements AccountListService {
     private final AccountsRepository accountsRepository;
     private final AccountTransactionRepository accountTransactionRepository;
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     @Override
     public Set<AccountsDTO> findUserAccounts(String userId) {
         Set<AccountsList> userAccountsList = accountsRepository.findAllById(userId);
@@ -35,11 +40,17 @@ public class AccountListServiceImpl implements AccountListService {
         //ExtendedSpringBeanUtils.copyProperties can also be used
         //using builder to gain more control over DTOs
         Set<AccountsDTO> accountsDTOSet = userAccountsList.stream()
-                .map(accountsList -> AccountListResponseBuilder.build(accountsList)).collect(Collectors.toSet());
+                .map(AccountListResponseBuilder::build).collect(Collectors.toSet());
 
         return accountsDTOSet;
     }
 
+    /**
+     *
+     * @param pageRequestDTO
+     * @param accountNum
+     * @return
+     */
     @Override
     public PaginateResponse findUserAccountTransactions(PageRequestDTO pageRequestDTO, String accountNum) {
         Pageable pageable = PaginationUtil.getPageable(pageRequestDTO);
@@ -47,9 +58,7 @@ public class AccountListServiceImpl implements AccountListService {
         Page<AccountTransactionsList> accountTransactionsListByAccountNumber
                 = accountTransactionRepository.findAccountTransactionsListByAccountNumber(accountNum, pageable);
         List<AccountTransactionsDTO> transactionsDTOList = accountTransactionsListByAccountNumber.stream()
-                .map(accountTransactionsList -> {
-                    return AccountTransactionsResponseBuilder.build(accountTransactionsList);
-                }).collect(Collectors.toList());
+                .map(AccountTransactionsResponseBuilder::build).collect(Collectors.toList());
 
         return PaginateResponse.builder()
                 .metaData(getMetadata(pageRequestDTO, accountTransactionsListByAccountNumber))
@@ -57,6 +66,12 @@ public class AccountListServiceImpl implements AccountListService {
                 .build();
     }
 
+    /**
+     *
+     * @param requestDTO
+     * @param page
+     * @return
+     */
     protected Paginate getMetadata(PageRequestDTO requestDTO, Page<?> page) {
         return Paginate.builder()
                 .totalPages(page.getTotalPages())
