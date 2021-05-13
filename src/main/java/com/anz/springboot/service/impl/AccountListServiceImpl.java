@@ -46,7 +46,7 @@ public class AccountListServiceImpl implements AccountListService {
 
         Page<AccountTransactionsList> accountTransactionsListByAccountNumber
                 = accountTransactionRepository.findAccountTransactionsListByAccountNumber(accountNum, pageable);
-        List<Object> transactionsDTOList = accountTransactionsListByAccountNumber.stream()
+        List<AccountTransactionsDTO> transactionsDTOList = accountTransactionsListByAccountNumber.stream()
                 .map(accountTransactionsList -> {
                     return AccountTransactionsResponseBuilder.build(accountTransactionsList);
                 }).collect(Collectors.toList());
