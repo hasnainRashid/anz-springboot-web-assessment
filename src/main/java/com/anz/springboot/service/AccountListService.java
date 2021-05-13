@@ -8,6 +8,18 @@ import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import java.util.Set;
 
 public interface AccountListService {
+    /**
+     *
+     * @param userId
+     * @return
+     */
     Set<AccountsDTO> findUserAccounts(String userId);
+
+    /**
+     *
+     * @param pageRequestDTO
+     * @param accountNum
+     * @return
+     */
     PaginateResponse findUserAccountTransactions(PageRequestDTO pageRequestDTO, String accountNum);
 }
